@@ -1,0 +1,463 @@
+--------------------------------------------------------------------
+In the folder, /lunarc/nobackup/projects/snic2020-6-41/salma-files/ImageProject/
+I have the following folders:
+1) Courses (The material of the course I have taken (e.g., FMAN45, DNA sequening, ...))
+2) Game (contains Sonja's annotation and main and updated version of the game)
+	In the Sonja's annotation folder, I have some scripts for extracting labels from sql files, remove the name and 	convert them to training databases,...)
+3) selected_images_folder (contain the raw, 8-bit png, 16-bit png files of 89099 selected images (Very precious dataset))
+4) master_notebooks_python_sripts (all the master projects files and folders including unsupervised analysis and notebooks)
+5) objects (Contains the objects from Jon's script for all channels in png form)
+
+
+--------------------------------------------------------------------
+June 22, 2020
+I am working on the final version of the  game.
+1. I am going to add so many examples for practicing and help part.
+2. I separated the Sonja's annotated imageand add them to  help pages of the game.
+3. I will add counter  to the number of images that people have annotated.
+--------------------------------------------------------------------
+June  23-26 working on the game and individual study plan.
+
+--------------------------------------------------------------------
+June 26
+1. Help part done.
+2. Counter done.
+3. Images and labels are bigger now and easier to annotate.
+Game folders are now two folders called:
+	Web_game_26_June_CompleteHelpntain 500 image for eacch channel)
+	Web_game_26_June_10000each  (cin 10000 image for each channel)
+4. Upload new versions for master students
+
+--------------------------------------------------------------------
+June29
+1. Completeing the individual study plan (finish)
+2. working on students feedbacks about game (Annie's feedback)
+--------------------------------------------------------------------
+June30
+1. Working on how to add lightning text on the labels by only put mouse over them
+2. solve the problem by adding title attributed to label checkboxes
+--------------------------------------------------------------------
+July1
+I took an off day
+--------------------------------------------------------------------
+July2
+NLP meeting 
+1. finish the help part and lightening text over the labels
+--------------------------------------------------------------------
+July3
+1. Finish training part of the game based on Sonja's previous annotations
+2. Game finished with sqlite databases
+--------------------------------------------------------------------
+July6
+1. Eugloh summer school started
+2. I received an email from lunarc people as follows for gpu problem:
+	1) you cannot use "interactve" in a batch job
+	2) there are 2 partiotions (queues) with gpus
+	-p gpu
+	-p gpuk20
+	the first one is quite loaded so you must be prepared to wait.
+	if you use the lu partition (-p lu) you will never get a gpu.
+3. working on gpu problem solving in lunarc
+--------------------------------------------------------------------
+July7 
+Second day of Eugloh school
+here are the link of three good lectures on 
+1)biomedical image_processing
+https://www.youtube.com/watch?v=SGKej5ZovVI
+
+
+2)Patient iPSC-derived brain cells as a precision model for stratifying cellular phenotypes and
+developing therapies
+https://www.youtube.com/watch?v=hgBSPd8xxwY
+
+I uploaded new game for Sonja-- I need accurate labels.
+
+I correct the commands for using lunarc's gpus and update students
+--------------------------------------------------------------------
+July 8
+
+
+Unsupervised Machine Learning for Gene Expression Analysis - Part 1 (Pedro Gabriel Dias Ferreira)
+https://www.youtube.com/watch?v=MY88Jz4f8lU
+
+Unsupervised Machine Learning for Gene Expression Analysis - Part 2 (Pedro Gabriel Dias Ferreira) 
+https://www.youtube.com/watch?v=B0109uFoT_I
+
+
+Meeting with Sonja
+Schedule until 1st of August
+
+1) Game and documentation 
+
+2) Writing manuscript about game(Only outline of the paper)
+
+3) find journal where to submit? (Bioinformatics...dataset of images?..
+
+4) Create Annoatate agreement table (50 images)
+
+5) Solve GPU problem of lunarc and Kebnekaise 
+
+6)Take the credits of EUGLOH summer school
+
+------------------------------------------------------------------------
+July 9
+Summer school lectures on Economy and epidemiological aspects of COVID-19
+
+A good lecture from Anders Widell a virologist from LUND univerity
+
+SARS-Cov-2 And COVID-19 (Joakim Esbjörnsson, Anders Widell) 
+https://www.youtube.com/watch?v=LUOInNx4q_Q
+
+
+
+---------------------------------------------------------------------------
+July 10
+
+Summer school was finished.
+Test is done. 
+A good lecture on Molecular biology and
+immunology of the SARS CoV-2 infection
+link: https://www.youtube.com/watch?v=_wjLK4_csOs
+
+---------------------------------------------------------------------------
+July 13
+Shared 89088 8-bit png images on snic2020-6-41 with students
+Finish gpu tutorial and shared with students(does not work on lunarc)
+start working with kebnekaise (login through terminal, thinlinc, ...)
+through thinlinc:  server:  kebnekaise-tl.hpc2n.umu.se
+through terminal : domain: ssh yourusername@abisko.hpc2n.umu.se
+or 			   ssh yourusername@kebnekaise.hpc2n.umu.se
+Solved mariam's problems with Game 
+---------------------------------------------------------------------------
+July 14
+Trying to solve gpu and torch.cuda problem in lunarc and kebnekaise (seems unsolvable :(() 
+
+---------------------------------------------------------------------------
+July 15, 16
+I tried to run three different scripts on lunarc and make a connection to gpus
+
+1) The first one was NER_by_Flair_NCBI.py
+################################################
+I tried the following job, first. However, It is still pending after 48 hours
+#SBATCH -A lu2020-2-10
+#SBATCH -p gpu
+#SBATCH --gres=gpu:2
+#SBATCH -n 1
+#SBATCH --mail-user=sa5202ka-s@student.lu.se
+#SBATCH --mail-type=END
+#SBATCH -J Flair_model_on_NCBI_disease
+#SBATCH -t 40:00:00
+#SBATCH -o NCBI_disease.out
+#SBATCH -e NCBI_disease.err
+#SBATCH --mem-per-cpu=11000
+
+python3  ../notebooks/python-scripts/NER_by_Flair_NCBI.py > NCBI_log.txt
+
+
+****** The good news is after it started, it used gpus and it took only 00:59:22 minutes
+to run while it took 13 hours on cpu.
+In this case The devices was shown as 
+Device: cuda:0
+It means that this if became true finally:
+if torch.cuda.is_available():
+		
+################################################
+Then I tried the following:
+
+
+#SBATCH -A lu2020-2-10
+#SBATCH -p gpuk20
+#SBATCH -n 1
+#SBATCH --mail-user=sa5202ka-s@student.lu.se
+#SBATCH --mail-type=END
+#SBATCH -J Flair_model_on_NCBI_disease
+#SBATCH -t 40:00:00
+#SBATCH -o NCBI_disease.out
+#SBATCH -e NCBI_disease.err
+#SBATCH --mem-per-cpu=11000
+
+python3  ../notebooks/python-scripts/NER_by_Flair_NCBI.py > NCBI_log.txt
+
+#################################################
+The run has started but again it was on CPU mode for the following part of code (It didnot run on gpu!!):
+if torch.cuda.is_available():
+	device = torch.device('cuda:0')
+	print('gpu')
+else:
+	device = torch.device('cpu')
+	print('cpu')
+
+#################################################
+I tried interactive mode by the following command in terminal:
+
+interactive -A LU 2020-2-10 -p gpu --gres=gpu:2 -t 1:00:00
+
+It is still pending after 48 hours.
+
+and the following one also didn't work, although it started immediately for one hour.
+interactive -A LU 2020-2-10 -p gpuk20 -t 1:00:00
+###############################################################################
+The second and third scripts were the following scripts and I got different errors for each of them.
+
+2) /snic2020-6-41/salma-files/NLPProject/Flair/jobs/gpu-test.py
+It is for testing numba which is a jit compiler but I was not successful.....
+In the jupyter notebook snic2020-06-41/salma-files/NLPProject/Flair/Regex_cuda_test.ipynb I have some notes on numba and jit and....... 
+
+
+
+
+3) /snic2020-6-41/salma-files/ImageProject/Courses/FMAN45/L14_files/torch_mnist_cuda.py
+I could run this on Marcus's system.
+The code has the following part to copy the data on gpu:
+# Load network and send to GPU
+    c = ConvNet()
+    print(summary(c, torch.zeros((1,1,28,28))))
+    c.cuda() 
+*****I received the following error while I was trying to run it on cpu in lunarc
+Found no NVIDIA driver on your system. Please check that you
+have an NVIDIA GPU and installed a driver from
+http://www.nvidia.com/Download/index.aspx
+
+And I am waiting for gpu results on lunarc
+
+
+
+
+While I was trying to run NER_by_Flair_NCBI.py on marcus system I got the following error:
+ImportError: /usr/lib/x86_64-linux-gnu/libstdc++.so.6: version `GLIBCXX_3.4.22' not found 
+(required by /mnt/fastdisk/BioNLP/anaconda3/lib/python3.7/site-packages/scipy/fft/_pocketfft/pypocketfft.cpython-37m-x86_64-linux-gnu.so)
+
+by typing the following command I got the version of GLIBCXX_3.4. which was:
+
+strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX
+GLIBCXX_3.4
+GLIBCXX_3.4.1
+GLIBCXX_3.4.2
+GLIBCXX_3.4.3
+GLIBCXX_3.4.4
+GLIBCXX_3.4.5
+GLIBCXX_3.4.6
+GLIBCXX_3.4.7
+GLIBCXX_3.4.8
+GLIBCXX_3.4.9
+GLIBCXX_3.4.10
+GLIBCXX_3.4.11
+GLIBCXX_3.4.12
+GLIBCXX_3.4.13
+GLIBCXX_3.4.14
+GLIBCXX_3.4.15
+GLIBCXX_3.4.16
+GLIBCXX_3.4.17
+GLIBCXX_3.4.18
+GLIBCXX_3.4.19
+GLIBCXX_3.4.20
+GLIBCXX_3.4.21
+GLIBCXX_DEBUG_MESSAGE_LENGTH
+
+I should contact marcus for updating the version since I don't have the admin privilages in his system
+
+--------------------------------------------------------------------
+July 17, July 20
+
+A thorough support is on:
+https://www.hpc2n.umu.se/documentation/guides/beginner-guide
+
+
+
+Work with kebnekaise gpu:
+a sample for kebnekaise job script is:
+
+###################################################################
+#!/bin/bash
+
+# Put in actual SNIC number
+#SBATCH -A snic2020-9-99
+#SBATCH -n 1
+#SBATCH -c 1
+#SBATCH -J torch_mnist
+#SBATCH --time=00:15:00
+
+###SBATCH -p largemem
+
+#For OpenFOAM version 6
+#ml purge > /dev/null 2>&1 # Ignore warnings from purge
+#ml icc/2018.1.163-GCC-6.4.0-2.28  impi/2018.1.163
+#ml ifort/2018.1.163-GCC-6.4.0-2.28  impi/2018.1.163
+#ml OpenFOAM/6
+
+# to change the default platforms directory of OpenFOAM
+#source /pfs/nobackup/home/m/morteza/etc/settings.sh
+
+# run the program
+#decomposePar -force >& log.decomposePar
+#srun -n 32 pelletReactingFoam -parallel >& log.pelletReactingFoam
+#reconstructPar -newTimes >& log.reconstructPar
+
+python ../torch_mnist.py
+####################################################################            
+--------------------------------------------------------------------
+July 21
+I am working on a tutorial for using kebnekaise and abisko
+for log in, save files, submit a job and use gpus
+
+It is stored as /snic2020-06-41/salma_files/Tutorials/kebnekaise_abisko_short_tutorial.ipynb
+I also completed other tutorials and store them in the same directory as /snic2020-06-41/salma_files/Tutorials/
+--------------------------------------------------------------------
+July 22
+submitting a job on cpu and also gpu works on kebnekaise and abisko now.
+A copy of tutorial is sent to Malou.
+
+For running our image processing scripts on kebnekaise we need the storage project,
+since we have only 25GB of memory on /pfs/nobackup/ space. However, we have access to 
+large memry project on kebnekaise which provides us 3072000MB memory for our job.
+""If your job requires more than 126000MB / node on Kebnekaise, there is a limited number of nodes with 3072000MB memory, which you may be allowed to use (you apply for it as a separate resource when you make your project proposal in SUPR). They are accessed by selecting the largemem partition of the cluster. You do this by setting: -p largemem.""
+--------------------------------------------------------------------
+July 23, 24
+I make a run on gpu nodes of kebnekaise. I had some error yesterday for my scripts
+as follows:
+
+AssertionError: 
+The NVIDIA driver on your system is too old (found version 10010).
+Please update your GPU driver by downloading and installing a new
+version from the URL: http://www.nvidia.com/Download/index.aspx
+Alternatively, go to: https://pytorch.org to install
+a PyTorch version that has been compiled with your version
+of the CUDA driver.
+
+I tried to change the version of pytorch(torch and torchvision) and then I got another error as:
+
+/bin/bash: /hpc2n/eb/software/lmod/lmod/init/bash: Transport endpoint is not connected
+python: error while loading shared libraries: libpython3.6m.so.1.0: cannot open shared object file: No such file or directory
+
+I emailed the problem to support people and I got this answer:
+You should load the appropriate python in your submit file using the following
+after the SBATCH commands and before actually using python, you can find the
+available versions of python using ml spider python/
+see the following for more information
+https://www.hpc2n.umu.se/documentation/environment/lmod
+
+
+ml purge 2>/dev/null >/dev/null
+ml GCCcore/8.3.0
+ml Python/3.7.4
+
+-----------------------------------------------------------------------
+July 27 (off day)
+-----------------------------------------------------------------------
+July 28
+
+I downgraded the version of torch and torchvision to be campatible with the NVIDIA driver version.
+
+My previous version of torch was torch==1.5.1 and torchvision==0.6.0.
+
+I had to reinstall them and install lower versions as (command="pip freeze"):
+torch==1.3.0
+torchvision==0.4.0
+
+I also had to load "cuDNN" and "CUDA" modules. And for loading these modules I had to load their dependencies
+which I can find out with "ml spider module_name".
+
+
+Finally, I could run my "torch_mnist_cuda.py" script as a job on kebnekaise on K80 node without error in newEnv environment.
+
+The list of modules I loaded were: (command== "ml")
+
+Currently Loaded Modules:
+  1) systemdefault       (S)   7) GCC/8.3.0        13) libffi/3.2.1
+  2) snicenvironment     (S)   8) ncurses/6.1      14) bzip2/1.0.8
+  3) iccifort/2019.5.281       9) libreadline/8.0  15) SQLite/3.29.0
+  4) GCCcore/8.3.0            10) Tcl/8.6.9        16) Python/3.7.4
+  5) zlib/1.2.11              11) XZ/5.2.4         17) CUDA/10.1.243
+  6) binutils/2.32            12) GMP/6.1.2        18) cuDNN/7.6.4.38
+
+
+For training flair model on kebnekaise I submitted the job. However, I got this error:
+PermissionError: [Errno 13] Permission denied: '/home/s/salmak/.flair/embeddings/pubmed-2015-fw-lm.pt'
+
+The steps:
+ml GCCcore/8.3.0
+ml Python/3.7.4
+source /pfs/nobackup/$HOME/NLPenv/bin/activate
+
+by running in terminal I got the memory error that quota exceeds.
+
+------------------------------------------------------------------------
+July 29, 30
+I annotated images again to compare with Sonja's and Jon and Mariam annotations.
+
+I assigned a number to each label and if I had the same label for each image, the numbers would sum up together..
+I assign a column to each label and show the results in a table in 
+snic2020-6-41/salma-files/ImageProject/Game/Annotations/Annotation_comparison.ipynb
+
+------------------------------------------------------------------------
+July31
+Iran shared images with us on lu box.
+All images are transfered to lunarc and kebnekaise for some analysis.
+
+I searched a little bit on a target journal for game manuscript.
+I think bioinformatcs journal is good.
+
+https://academic.oup.com/bioinformatics/pages/instructions_for_authors
+
+Application Notes (up to 2 pages; this is approx. 1,300 words or 1,000 words plus one figure): Applications Notes are short descriptions of novel software or new algorithm implementations, databases and network services (web servers, and interfaces). Software or data must be freely available to non-commercial users. Availability and Implementation must be clearly stated in the article. Authors must also ensure that the software is available for a full two years following publication. Web services must not require mandatory registration by the user. Additional supplementary data can be published online-only by the journal. This supplementary material should be referred to in the abstract of the Application Note. If describing software, the software should run under nearly all conditions on a wide range of machines. Web servers should not be browser specific. Application Notes must not describe trivial utilities, nor involve significant investment of time for the user to install. The name of the application should be included in the title.
+
+
+--------------------------------------------------------------------------
+Aug03-07
+working on Iran's images.
+1) Read them and convert them to a numpy arrays categorized in two classes: Control, and lps
+2) Cut images to (224,224) tiles to fed into a dense network.
+3) The total images were 140 conrol images and 70 lps images.
+4) Now, we have 2520 control tiles and 1820 lps images. the size of lps ones are different.
+
+-------------------------------------------------------------------------
+
+Aug10
+
+train a DenseNet with the images and test new data.
+I can find the DenseNet paper from following link:
+
+
+All the files are stored on snic2020-6-41/salma-files/ImageProject/Collabrations directory.
+
+There are still some issues with the result.
+-------------------------------------------------------------------------
+Aug11
+
+Continue the analysis of iran images
+
+Complete Annotation_comparison notebook and upload it to AitsLab/Microscopy_image_analysis_folder
+
+Upload Tutorials directory to AitsLab/Infrastructure
+
+
+------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
